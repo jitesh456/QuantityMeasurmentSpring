@@ -4,10 +4,11 @@ import com.example.quantitymeasurment.dao.UnitDao;
 import com.example.quantitymeasurment.enumerations.Unit;
 import com.example.quantitymeasurment.enumerations.UnitType;
 import com.example.quantitymeasurment.implementation.IQuantityMeasurementService;
+import com.example.quantitymeasurment.response.ResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,13 +18,24 @@ public class QuantityMeasurementController {
     IQuantityMeasurementService iQuantityMeasurementService;
 
     @GetMapping ("/allUnitType")
-    public List getAllUnitType(){
-        return iQuantityMeasurementService.getAllUnitType();
+    public ResponseEntity<ResponseDto> getAllUnitType(){
+        List<UnitType> allUnitType = iQuantityMeasurementService.getAllUnitType();
+        ResponseDto responseDto=new ResponseDto(201,"Success",allUnitType);
+        return new ResponseEntity<>(responseDto, HttpStatus.FOUND);
     }
 
     @GetMapping("/subUnit")
-    public List<Unit> getAllSubUnit(@RequestParam("UnitType")UnitType unitType) {
+    public ResponseEntity<ResponseDto> getAllSubUnit(@RequestParam("UnitType")UnitType unitType) {
+        List<Unit> subUnit = iQuantityMeasurementService.getSubUnit(unitType);
+        ResponseDto responseDto=new ResponseDto(201,"Success",subUnit);
+        return new ResponseEntity<>(responseDto, HttpStatus.FOUND);
+    }
 
-        return iQuantityMeasurementService.getSubUnit(unitType);
+    @PostMapping("/convert")
+    public ResponseEntity<ResponseDto> convert(@RequestBody UnitDao unitDao){
+
+        double convert = iQuantityMeasurementService.convert(unitDao);
+        ResponseDto responseDto=new ResponseDto(201,"Success",convert);
+        return new ResponseEntity<>(responseDto, HttpStatus.FOUND);
     }
 }

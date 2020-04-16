@@ -10,4 +10,6 @@ public interface IQuantityMeasurementService {
     List<UnitType> getAllUnitType();
 
     List<Unit> getSubUnit(UnitType unitType);
+
+    double convert(UnitDao unitDao);
 }

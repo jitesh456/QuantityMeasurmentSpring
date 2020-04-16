@@ -18,13 +18,23 @@ public class QuantityMeasurementService implements IQuantityMeasurementService {
     public List<UnitType> getAllUnitType() {
 
         return Arrays.asList(UnitType.values());
+
     }
 
     @Override
     public List<Unit> getSubUnit(UnitType unitType) {
         List<Unit> units;
-        UnitDao unitDao=new UnitDao(unitType);
-        return units = Arrays.asList(Unit.values()).stream().filter(unit -> unit.unitType.equals(unitDao.getUnitType())).collect(Collectors.toList());
-
+        UnitDao unitDao=new UnitDao();
+        unitDao.setUnitType(unitType);
+        return units = Arrays.asList(Unit.values()).stream()
+                .filter(unit -> unit.unitType.equals(unitDao.getUnitType())).collect(Collectors.toList());
     }
+
+    @Override
+    public double convert(UnitDao unitDao) {
+        double convertValue=(unitDao.getInitialValue()*unitDao.getInputUnit().baseValue)*unitDao.getOutputUnit().actualValue;
+        return convertValue;
+    }
+
+
 }
